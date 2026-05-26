@@ -1,0 +1,115 @@
+<template>
+  <div class="observe-tune-dashboard">
+    <div class="dashboard-controls">
+      <button class="run-observe-button" onclick={handleRunObserve}>Run Observe Cycle</button>
+      <div style="color: #0ea5e9; font-size: 11px; margin-left: 20px;">Champion: {currentChampion} | Rollback: {isRollbackMode}</div>
+    </div>
+    <div class="tabs-navigation">
+      <button class="tab-button" data-tab="loop1" onclick={handleTabClick} class:active={isLoop1Tab}>LOOP 1: Classifier</button>
+      <button class="tab-button" data-tab="loop2" onclick={handleTabClick} class:active={isLoop2Tab}>LOOP 2: Routing (Coming Soon)</button>
+    </div>
+    <template if:true={hasError}>
+      <div class="error-container">
+        <div class="error-message">{errorMessage}</div>
+      </div>
+    </template>
+    <template if:true={isLoop1Tab}>
+      <template if:false={observeTriggered}>
+        <div class="initial-state">
+          <div class="section initial-prompt">
+            <div class="section-header">OBSERVE & TUNE CONTROL PLANE</div>
+            <div class="prompt-text">Loop 1 — Ready to observe the lead cohort and compile classifier tune proposals?</div>
+            <button class="start-button" onclick={handleStartObserve}>Start Observe (1,847 leads)</button>
+          </div>
+        </div>
+      </template>
+      <template if:true={isLoading}>
+        <div class="loading-container">
+          <div class="loading-text">Running Observe on 1,847 leads...</div>
+          <div class="spinner"></div>
+        </div>
+      </template>
+      <template if:true={observeTriggered}>
+        <div class="section observe-section">
+          <div class="section-header">LOOP 1 OBSERVE — Five Days Later</div>
+          <div class="cohort-header">1,847 leads ready for observation</div>
+          <div class="cohort-table">
+            <template for:each={cohortLeads} for:item="lead">
+              <div class="cohort-row" key={lead.name}>
+                <div class="lead-name">{lead.name}</div>
+                <div class="lead-status">{lead.status}</div>
+                <div class="lead-days">{lead.daysAgo} days ago</div>
+                <div class="lead-verdict">{lead.verdict}</div>
+              </div>
+            </template>
+          </div>
+          <template if:true={tuneProposal}>
+            <div class="verdict-detail">
+              <div class="verdict-title">Jennifer Park — Decision Confirmed</div>
+              <div class="verdict-reasoning">{tuneProposal.proposals[0].title}</div>
+            </div>
+          </template>
+        </div>
+        <template if:true={tuneProposal}>
+          <div class="section tune-section">
+            <div class="section-header">LOOP 1 TUNE — Classifier Model Learning</div>
+            <div class="cycle-info">Cycle {tuneProposal.cycleStart} to {tuneProposal.cycleEnd} — {tuneProposal.verdictCount} verdicts compiled</div>
+            <div class="tune-context">
+              <div class="context-header">Loom Tune Context v4.2</div>
+              <div class="context-items">
+                <div class="context-item">Pattern recognition framework</div>
+                <div class="context-item">Evidence weighting rules</div>
+                <div class="context-item">"Would I make the same decision again" framing</div>
+                <div class="context-item">Counter-example handling</div>
+                <div class="context-item">No-signal is diagnostic not signal</div>
+                <div class="context-item">Sales execution ≠ triage</div>
+              </div>
+            </div>
+            <div class="tune-proposal">
+              <div class="proposal-header">Tune Proposal — Model Updates</div>
+              <template for:each={proposalList} for:item="proposal">
+                <div class="proposal-item" key={proposal.title}>
+                  <div class="proposal-title">{proposal.title}</div>
+                  <div class="proposal-impact">{proposal.impact}</div>
+                  <div class="proposal-change">{proposal.change}</div>
+                </div>
+              </template>
+              <div class="diagnostic-alerts">
+                <div class="alert-header">Diagnostic Alerts</div>
+                <div class="alert-item">No-Signal rate: {tuneProposal.noSignalRate} — within band</div>
+                <div class="alert-item warning">{tuneProposal.overrideAlert}</div>
+              </div>
+            </div>
+            <template if:false={tuneApproved}>
+              <button class="approve-button" onclick={handleApproveTune}>{actionButtonLabel}</button>
+            </template>
+          </div>
+        </template>
+        <template if:true={controlPlaneVisible}>
+          <div class="section control-plane-section">
+            <div class="section-header">CONTROL PLANE — Loop 1 Classifier Release Cycle</div>
+            <div class="release-message">{releaseStatus.action}: {releaseStatus.newModel} is now champion. Release cycle in progress.</div>
+            <div class="release-pipeline">
+              <template for:each={releaseStages} for:item="stage">
+                <div class="stage" key={stage.name}>
+                  <div class="stage-name">{stage.name}</div>
+                  <div class="stage-status" data-status={stage.status}>{stage.status}</div>
+                </div>
+              </template>
+            </div>
+            <div class="final-status">✅ {releaseStatus.newModel} is now the Champion Model</div>
+          </div>
+        </template>
+      </template>
+    </template>
+    <template if:true={isLoop2Tab}>
+      <div class="section loop2-placeholder">
+        <div class="section-header">LOOP 2 OBSERVE & TUNE — Routing Model</div>
+        <div class="placeholder-text">
+          <div>Observe & Tune for the Loop 2 routing classifier</div>
+          <div style="color: #888; font-size: 12px; margin-top: 8px;">Coming in future release</div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
