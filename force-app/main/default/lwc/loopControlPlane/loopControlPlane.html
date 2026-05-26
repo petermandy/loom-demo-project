@@ -1,0 +1,137 @@
+<template>
+    <div class="cp-container">
+        <div class="cp-header">
+            <div class="cp-title">Loom Control Plane</div>
+            <div class="cp-subtitle">Model governance · Release management · Supervisory insights</div>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="cp-loading">Loading control plane data...</div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <!-- Model Health -->
+            <div class="cp-section">
+                <div class="section-label">Model Health</div>
+                <div class="model-health-row">
+                    <div class="model-card champion">
+                        <div class="model-badge">Champion</div>
+                        <div class="model-version">{championVersion}</div>
+                        <div class="model-meta">Active · Decision Policy v1.0</div>
+                    </div>
+                    <div class="model-arrow">→</div>
+                    <div class="model-card candidate">
+                        <div class="model-badge">Candidate</div>
+                        <div class="model-version">{candidateVersion}</div>
+                        <div class="model-meta">Shadow · Pending approval</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Proposals -->
+            <template if:true={hasProposals}>
+                <div class="cp-section">
+                    <div class="section-label">Pending Proposals</div>
+                    <template for:each={l1ProposalsFormatted} for:item="p">
+                        <div class="proposal-card" key={p.id}>
+                            <div class="proposal-header">
+                                <span class="proposal-loop">{p.loop}</span>
+                                <span class="proposal-version">{p.fromVersion} → {p.toVersion}</span>
+                            </div>
+                            <div class="proposal-body">
+                                <template for:each={p.proposalLines} for:item="line">
+                                    <div class="proposal-line" key={line}>{line}</div>
+                                </template>
+                            </div>
+                            <div class="proposal-footer">
+                                <span class="proposal-stat">No-Signal: {p.noSignalRate}</span>
+                                <span class="proposal-stat">Override Δ: {p.overrideDelta}</span>
+                            </div>
+                        </div>
+                    </template>
+                    <template for:each={l2ProposalsFormatted} for:item="p">
+                        <div class="proposal-card" key={p.id}>
+                            <div class="proposal-header">
+                                <span class="proposal-loop">{p.loop}</span>
+                                <span class="proposal-version">{p.modelUpdate}</span>
+                            </div>
+                            <div class="proposal-body">
+                                <template for:each={p.proposalLines} for:item="line">
+                                    <div class="proposal-line" key={line}>{line}</div>
+                                </template>
+                            </div>
+                            <div class="proposal-footer">
+                                <span class="proposal-stat">Confirm rate: {p.confirmRate}%</span>
+                                <span class="proposal-stat">Observed: {p.totalObserved}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template if:true={noProposals}>
+                <div class="cp-section">
+                    <div class="section-label">Pending Proposals</div>
+                    <div class="cp-empty">No proposals yet — run the RAOT chain to generate</div>
+                </div>
+            </template>
+
+            <!-- Override Patterns -->
+            <div class="cp-section">
+                <div class="section-label">Override Patterns</div>
+                <template for:each={overridePatterns} for:item="o">
+                    <div class="override-row" key={o.id}>
+                        <div class="override-pattern">{o.pattern}</div>
+                        <div class="override-value">{o.value}</div>
+                        <div class="override-trend">{o.trend}</div>
+                        <div class="override-note">{o.note}</div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Supervisory Insights -->
+            <div class="cp-section">
+                <div class="section-label">Supervisory Insights</div>
+                <template for:each={supervisoryInsights} for:item="s">
+                    <div class={s.insightClass} key={s.id}>
+                        <span class="insight-icon">{s.icon}</span>
+                        <span class="insight-text">{s.insight}</span>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Active Release Cycles — always visible -->
+            <div class="cp-section">
+                <div class="section-label">Active Release Cycle</div>
+                <template if:false={showPipeline}>
+                    <div class="cp-empty">No active release — click Approve to begin</div>
+                </template>
+                <template if:true={showPipeline}>
+                    <div class="pipeline">
+                        <template for:each={pipelineStages} for:item="stage">
+                            <div key={stage.id} class={stage.stateClass}>
+                                <div class="stage-dot"></div>
+                                <div class="stage-label">{stage.label}</div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Actions -->
+            <div class="cp-actions">
+                <button class="approve-btn" onclick={handleApprove} disabled={approveButtonDisabled}>
+                    {approveButtonLabel}
+                </button>
+                <button class="refresh-btn" onclick={loadData}>↻ Refresh</button>
+            </div>
+
+        </template>
+
+        <template if:true={error}>
+            <div class="cp-error">{error}</div>
+        </template>
+
+    </div>
+</template>

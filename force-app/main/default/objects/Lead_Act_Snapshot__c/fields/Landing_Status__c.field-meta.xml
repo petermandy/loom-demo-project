@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Landing_Status__c</fullName>
+    <description>Whether the downstream Lead update landed and, if not, why.</description>
+    <externalId>false</externalId>
+    <label>Landing Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>awaiting_application</fullName>
+                <default>false</default>
+                <label>Awaiting Application</label>
+            </value>
+            <value>
+                <fullName>landed</fullName>
+                <default>false</default>
+                <label>Landed</label>
+            </value>
+            <value>
+                <fullName>validation_rule_rejected</fullName>
+                <default>false</default>
+                <label>Validation Rule Rejected</label>
+            </value>
+            <value>
+                <fullName>integration_failed</fullName>
+                <default>false</default>
+                <label>Integration Failed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

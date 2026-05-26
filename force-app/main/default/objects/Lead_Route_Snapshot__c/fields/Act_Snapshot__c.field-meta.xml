@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Act_Snapshot__c</fullName>
+    <label>Act Snapshot</label>
+    <type>Lookup</type>
+    <referenceTo>Lead_Act_Snapshot__c</referenceTo>
+    <relationshipLabel>Route Snapshots</relationshipLabel>
+    <relationshipName>Route_Snapshots</relationshipName>
+    <required>false</required>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

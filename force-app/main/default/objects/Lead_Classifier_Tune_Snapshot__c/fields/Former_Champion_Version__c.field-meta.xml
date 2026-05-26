@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Former_Champion_Version__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Classifier version this deployment replaced.</description>
+    <externalId>false</externalId>
+    <label>Former Champion Version</label>
+    <referenceTo>Lead_Classifier_Model_Version__c</referenceTo>
+    <relationshipLabel>Tune Snapshots Replacing This Version</relationshipLabel>
+    <relationshipName>Tune_Snapshots_Replacing_This_Version</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

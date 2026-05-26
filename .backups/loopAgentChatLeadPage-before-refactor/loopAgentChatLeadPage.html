@@ -1,0 +1,185 @@
+<template>
+  <div class="loom-panel">
+    <div class="loom-panel-header">
+      <div class="loop-status">{currentLoopStatus}</div>
+    </div>
+
+    <template if:true={hasError}>
+      <div class="error-container">
+        <div class="error-message">{errorMessage}</div>
+      </div>
+    </template>
+
+    <template if:true={isLoadingState}>
+      <div class="loading-container">
+        <div class="loading-text">{loadingMessage}</div>
+        <div class="animated-spinner">
+          <div class="spinner-dot"></div>
+          <div class="spinner-dot"></div>
+          <div class="spinner-dot"></div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isInitialPhase}>
+      <div class="initial-state">
+        <div class="ready-message">Ready to analyze this lead. Click Start Analysis to begin.</div>
+      </div>
+    </template>
+
+    <template if:true={isReadApiProgress}>
+      <div class="read-api-progress">
+        <div class="status-text">Loom Read API: scanning lead intake...</div>
+        <div class="enrichment-services">
+          <div class="service-item">Gathering lead attributes</div>
+          <div class="service-item">Analyzing source quality</div>
+          <div class="service-item">Running enrichment service</div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isDataCloudPhase}>
+      <div class="data-cloud-phase">
+        <div class="status-text">Data Cloud: identity resolution and state joins running...</div>
+        <template if:true={readSnapshot}>
+          <div class="enrichment-results">
+            <div class="result-item">
+              <span class="result-label">Existing customer match:</span>
+              <span class="result-value">{dataCloudJoins.existingCustomer}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Producer of Record:</span>
+              <span class="result-value">{dataCloudJoins.producerOfRecord}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Suppression flag:</span>
+              <span class="result-value">{dataCloudJoins.suppressionFlag}</span>
+            </div>
+            <div class="result-item highlight">
+              <span class="result-label">Source trailing 90-day bind rate:</span>
+              <span class="result-value">{dataCloudJoins.sourceBindRate}</span>
+            </div>
+            <template if:true={dataCloudJoins.householdInfo}>
+              <div class="result-item household">
+                <span class="result-label">Household:</span>
+                <span class="result-value">{dataCloudJoins.householdInfo}</span>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <template if:true={isSnapshotComplete}>
+      <div class="read-api-progress">
+        <div class="status-text">Writing Lead Snapshot to Data Cloud (immutable)...</div>
+        <div class="enrichment-services">
+          <div class="service-item">Serializing enrichment data</div>
+          <div class="service-item">Creating immutable record</div>
+          <div class="service-item">Snapshot ready for Act phase</div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isReadPhase}>
+      <div class="read-complete-phase">
+        <div class="phase-complete-header">Read Phase Complete</div>
+        <div class="completion-checklist">
+          <div class="check-item">Lead enriched with Data Cloud</div>
+          <div class="check-item">4 fields populated</div>
+          <div class="check-item">Ready for classification</div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isActProcessing}>
+      <div class="act-classifier-phase">
+        <div class="classifier-header">Loom Act API: classifier processing Lead Snapshot...</div>
+        <div class="signals-evaluating">
+          <div class="signals-title">Evaluating signals:</div>
+          <div class="signal-item">Source quality assessment</div>
+          <div class="signal-item">Financial appetite matching</div>
+          <div class="signal-item">Propensity modeling</div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isActPhase}>
+      <div class="act-verdict-phase">
+        <div class="verdict-box">
+          <div class="verdict-label">{verdictOutcome}</div>
+          <div class="verdict-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Confidence:</span>
+              <span class="metric-value">{verdictConfidence}</span>
+            </div>
+          </div>
+        </div>
+        
+        <template if:true={householdSummary}>
+          <div class="household-panel">
+            <div class="household-header">Household Context</div>
+            <div class="household-detail">{householdSummary}</div>
+            <template if:true={porInfo}>
+              <div class="por-detail">POR: {porInfo}</div>
+            </template>
+            <div class="suggested-points">
+              <div class="points-header">Suggested Talking Points:</div>
+              <div class="point">Existing household relationship — spouse active customer</div>
+              <div class="point">Clean claims history — low risk profile</div>
+              <div class="point">Opportunity to expand coverage across household</div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <template if:true={isLoop2Processing}>
+      <div class="act-classifier-phase">
+        <div class="classifier-header">Loop 2: routing to Producer of Record...</div>
+        <div class="signals-evaluating">
+          <div class="signals-title">Processing assignment:</div>
+          <div class="signal-item">Verifying Producer of Record constraint</div>
+          <div class="signal-item">Assigning lead to agent queue</div>
+          <div class="signal-item">Routing complete</div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={isLoop2Phase}>
+      <div class="loop2-complete-phase">
+        <div class="phase-complete-header">Loop 2 — Complete</div>
+        <div class="completion-checklist">
+          <div class="check-item">Lead routed to agent</div>
+          <div class="check-item">Producer of Record assigned</div>
+          <div class="check-item">Ready for agent action</div>
+        </div>
+      </div>
+    </template>
+
+    <div class="button-area">
+      <template if:true={isInitialPhase}>
+        <lightning-button label="Start Analysis" onclick={handleStartRead} variant="brand" class="btn"></lightning-button>
+        <lightning-button label="Reset" onclick={handleReset} variant="neutral" class="btn"></lightning-button>
+      </template>
+
+      <template if:false={isInitialPhase}>
+        <template if:true={isReadPhase}>
+          <lightning-button label="Continue to Act" onclick={handleStartAct} variant="brand" class="btn"></lightning-button>
+          <lightning-button label="Reset" onclick={handleReset} variant="neutral" class="btn"></lightning-button>
+        </template>
+
+        <template if:true={isActPhase}>
+          <template if:true={shouldShowLoop2}>
+            <lightning-button label="Continue to Loop 2" onclick={handleStartLoop2} variant="brand" class="btn"></lightning-button>
+          </template>
+          <lightning-button label="Reset" onclick={handleReset} variant="neutral" class="btn"></lightning-button>
+        </template>
+
+        <template if:true={isLoop2Phase}>
+          <lightning-button label="Reset" onclick={handleReset} variant="neutral" class="btn"></lightning-button>
+        </template>
+      </template>
+    </div>
+  </div>
+</template>

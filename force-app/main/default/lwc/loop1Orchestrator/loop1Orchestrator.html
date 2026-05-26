@@ -1,0 +1,36 @@
+<template>
+    <div class="orchestrator-container">
+
+        <div class="button-container">
+            <template if:true={showContinue}>
+                <button class="btn-continue" onclick={handleContinue}>
+                    ▶ Continue — Fast-forward complete
+                </button>
+            </template>
+            <div class="btn-row">
+                <button class="btn btn-run" onclick={runFullChain} disabled={runButtonDisabled}>
+                    {buttonLabel}
+                </button>
+                <template if:true={showRerun}>
+                    <button class="btn btn-rerun" onclick={handleRerun} disabled={runButtonDisabled}>
+                        ↻ Re-run No-Signal
+                    </button>
+                </template>
+                <button class="btn btn-reset" onclick={handleReset} disabled={resetButtonDisabled}>
+                    🔄 Reset
+                </button>
+            </div>
+        </div>
+
+        <template if:true={hasMessages}>
+            <div class="messages-container">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.messageClass}>
+                        <span class="message-text">{msg.text}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+    </div>
+</template>

@@ -1,0 +1,87 @@
+<template>
+  <div class="fsc-home-container">
+    <div class="header-section">
+      <div class="header-content">
+        <h1 class="page-title">Financial Services Cloud</h1>
+        <p class="page-subtitle">Powered by Loom AI Lead Triage & Routing</p>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <section class="cards-section">
+        <h2 class="section-title">Quick Access</h2>
+        <div class="cards-grid">
+          <template for:each={cards} for:item="card">
+            <div 
+              class="card" 
+              key={card.title}
+              data-link={card.link}
+              onclick={handleCardClick}
+            >
+              <div class="card-icon">
+                <lightning-icon icon-name={card.icon} size="large"></lightning-icon>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">{card.title}</h3>
+                <p class="card-count">{card.count}</p>
+                <p class="card-status">{card.status}</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <h2 class="section-title">Key Metrics</h2>
+        <div class="metrics-grid">
+          <template for:each={dashboardMetrics} for:item="metric">
+            <div class="metric-card" key={metric.label}>
+              <div class="metric-header">
+                <p class="metric-label">{metric.label}</p>
+                <p class="metric-change">{metric.change}</p>
+              </div>
+              <p class="metric-value">{metric.value}</p>
+              <div class="metric-bar"></div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section class="activity-section">
+        <h2 class="section-title">Recent Activity</h2>
+        <div class="activity-list">
+          <template for:each={recentActivity} for:item="activity">
+            <div class="activity-item" key={activity.name} data-link={activity.link} onclick={handleActivityClick}>
+              <div class="activity-icon">
+                <lightning-icon icon-name={activity.icon} size="small"></lightning-icon>
+              </div>
+              <div class="activity-content">
+                <p class="activity-name">{activity.name}</p>
+                <p class="activity-action">{activity.action}</p>
+              </div>
+              <p class="activity-time">{activity.time}</p>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section class="system-status">
+        <h2 class="section-title">System Status</h2>
+        <div class="status-grid">
+          <div class="status-item">
+            <p class="status-label">Champion Model</p>
+            <p class="status-value">v2.8.0</p>
+          </div>
+          <div class="status-item">
+            <p class="status-label">Lead Queue</p>
+            <p class="status-value">On Schedule</p>
+          </div>
+          <div class="status-item">
+            <p class="status-label">Agent Capacity</p>
+            <p class="status-value">78%</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>

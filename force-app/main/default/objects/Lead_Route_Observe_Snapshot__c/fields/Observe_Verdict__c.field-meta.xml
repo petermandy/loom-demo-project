@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Observe_Verdict__c</fullName>
+    <label>Observe Verdict</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Decision Confirmed</fullName><default>false</default></value>
+            <value><fullName>Decision Overturned</fullName><default>false</default></value>
+            <value><fullName>Still In Window</fullName><default>false</default></value>
+            <value><fullName>Inconclusive</fullName><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

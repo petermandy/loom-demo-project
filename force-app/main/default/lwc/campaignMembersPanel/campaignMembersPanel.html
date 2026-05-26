@@ -1,0 +1,28 @@
+<template>
+  <div class="campaign-panel">
+    <div class="panel-header">
+      <h3>Campaign History</h3>
+      <span class="member-count">({campaignMembers.length})</span>
+    </div>
+    
+    <template if:true={hasMembers}>
+      <div class="members-list">
+        <template for:each={campaignMembers} for:item="member">
+          <div key={member.Id} class="member-item">
+            <div class="member-campaign">{member.CampaignName}</div>
+            <div class="member-status">Status: {member.Status}</div>
+            <template if:true={member.CreatedDate}>
+              <div class="member-date">Created: {member.CreatedDate}</div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <template if:false={hasMembers}>
+      <div class="empty-state">
+        <p>No campaign memberships</p>
+      </div>
+    </template>
+  </div>
+</template>

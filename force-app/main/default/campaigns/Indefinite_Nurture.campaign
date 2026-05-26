@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Campaign xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Nurture queue for indefinite (6+ months) leads</description>
+    <name>Indefinite_Nurture</name>
+    <status>In Progress</status>
+    <type>Nurture</type>
+</Campaign>

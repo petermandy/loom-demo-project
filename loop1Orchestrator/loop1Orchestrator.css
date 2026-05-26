@@ -1,0 +1,60 @@
+.orchestrator-container {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.message {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.message.system {
+  background: #f3f4f6;
+  color: #111827;
+  font-weight: 500;
+}
+
+.message.user {
+  margin-left: auto;
+  max-width: 75%;
+  background: #0b84d9;
+  color: white;
+}
+
+.message.assistant {
+  max-width: 75%;
+  background: #f3f4f6;
+  color: #111827;
+  white-space: pre-wrap;
+}
+
+.message.error {
+  max-width: 75%;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.button-container {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.message-text {
+  display: block;
+}

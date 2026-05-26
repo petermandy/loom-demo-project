@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IP_Address_Match__c</fullName>
+    <label>IP Address Multi-Submit Match</label>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+</CustomField>

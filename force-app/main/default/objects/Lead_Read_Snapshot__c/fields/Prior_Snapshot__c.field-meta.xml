@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prior_Snapshot__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Self-lookup to the prior Read Snapshot in this lead&apos;s chain (re-read pattern).</description>
+    <externalId>false</externalId>
+    <label>Prior Snapshot</label>
+    <referenceTo>Lead_Read_Snapshot__c</referenceTo>
+    <relationshipLabel>Subsequent Read Snapshots</relationshipLabel>
+    <relationshipName>Subsequent_Read_Snapshots</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

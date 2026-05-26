@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Observe and Tune Control Plane Dashboard</description>
+    <label>Observe Tune Control Plane</label>
+    <lwcComponent>observeTuneDashboard</lwcComponent>
+    <motif>Custom63: Gauge</motif>
+</CustomTab>

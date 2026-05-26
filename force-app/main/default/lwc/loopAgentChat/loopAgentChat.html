@@ -1,0 +1,71 @@
+<template>
+  <div class="loop-agent-container">
+    <div class="agent-header">
+      <div class="agent-header-icon">
+        <lightning-icon icon-name="utility:robot" size="small"></lightning-icon>
+      </div>
+      <div class="agent-header-text">
+        <p class="agent-title">Lumen Loop Agent</p>
+        <p class="agent-subtitle" if:true={leadName}>Analyzing {leadName}</p>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatContainer">
+      <template for:each={messages} for:item="msg">
+        <div key={msg.id} class={msg.cssClass}>
+          <div if:true={msg.isAgent} class="agent-avatar">
+            <lightning-icon icon-name="utility:robot" size="small"></lightning-icon>
+          </div>
+          <div class={msg.messageClass}>
+            <p if:true={msg.text} class="message-text">{msg.text}</p>
+            <template if:true={msg.verdict}>
+              <div class="verdict-box">
+                <p class="verdict-label">ACT Result:</p>
+                <p class="verdict-text">Verdict: <span class={msg.verdictClass}>{msg.verdict}</span> ({msg.confidence} confidence)</p>
+              </div>
+            </template>
+            <template if:true={msg.proposal}>
+              <div class="proposal-box">
+                <p class="proposal-label">TUNE Proposal:</p>
+                <p class="proposal-text">{msg.proposal}</p>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+      <div if:true={isRunning} class="agent-message">
+        <div class="agent-avatar">
+          <lightning-icon icon-name="utility:robot" size="small"></lightning-icon>
+        </div>
+        <div class="message-bubble loading">
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-actions">
+      <button class="action-button start" onclick={handleStartAnalysis} disabled={isRunning} if:false={hasStarted}>
+        Start Analysis
+      </button>
+      <button class="action-button reset" onclick={handleReset} disabled={isRunning} if:true={hasStarted}>
+        Reset
+      </button>
+      <button class="action-button reject" onclick={handleReject} disabled={isRunning} if:true={hasStarted}>
+        Reject
+      </button>
+      <button class="action-button approve" onclick={handleApprove} disabled={isRunning} if:true={showApproveButton}>
+        Approve & Release
+      </button>
+      <button class="action-button continue" onclick={handleContinue} if:true={showContinueButton} disabled={isRunning}>
+        Continue
+      </button>
+    </div>
+
+    <div if:true={errorMessage} class="error-banner">
+      <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+      <span>{errorMessage}</span>
+    </div>
+  </div>
+</template>

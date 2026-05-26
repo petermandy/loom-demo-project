@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Model_Version__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>The new Classifier version produced by this deployment.</description>
+    <externalId>false</externalId>
+    <label>New Model Version</label>
+    <referenceTo>Lead_Classifier_Model_Version__c</referenceTo>
+    <relationshipLabel>Tune Snapshots Producing This Version</relationshipLabel>
+    <relationshipName>Tune_Snapshots_Producing_This_Version</relationshipName>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

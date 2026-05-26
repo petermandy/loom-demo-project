@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loop2_Nurture_Category__c</fullName>
+    <label>Loop2 Nurture Category</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Immediate</fullName><default>false</default></value>
+            <value><fullName>Short_Window</fullName><default>false</default></value>
+            <value><fullName>Medium_Window</fullName><default>false</default></value>
+            <value><fullName>Long_Window</fullName><default>false</default></value>
+            <value><fullName>Extended</fullName><default>false</default></value>
+            <value><fullName>Indefinite</fullName><default>false</default></value>
+        </valueSetDefinition>
+    </valueSet>
+    <required>false</required>
+</CustomField>

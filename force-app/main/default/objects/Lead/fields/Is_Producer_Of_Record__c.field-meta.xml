@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Producer_Of_Record__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox to indicate if this lead has a Producer of Record (POR) assigned</description>
+    <externalId>false</externalId>
+    <label>Is Producer Of Record</label>
+    <type>Checkbox</type>
+</CustomField>

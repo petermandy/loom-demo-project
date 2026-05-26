@@ -1,0 +1,20 @@
+<template>
+  <div class="orchestrator-container">
+    <div class="messages-container">
+      <template for:each={messages} for:item="msg">
+        <div key={msg} class="message" lwc:class={msg.type}>
+          <span class="message-text">{msg.text}</span>
+        </div>
+      </template>
+    </div>
+    <div class="button-container">
+      <button
+        class="slds-button slds-button_brand"
+        onclick={runFullChain}
+        disabled={buttonDisabled}
+      >
+        {buttonLabel}
+      </button>
+    </div>
+  </div>
+</template>

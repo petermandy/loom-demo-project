@@ -1,0 +1,185 @@
+public with sharing class Loop1OrchestratorController {
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callRead(List<String> leadIds) {
+        LoopReadAction.ReadRequest req = new LoopReadAction.ReadRequest();
+        req.leadIds = leadIds;
+        List<LoopReadAction.ReadResult> results = LoopReadAction.execute(new List<LoopReadAction.ReadRequest>{ req });
+        Map<String, Object> r = new Map<String, Object>();
+        if (!results.isEmpty()) {
+            r.put('success', results[0].success);
+            r.put('message', results[0].message);
+            r.put('readSnapshotIds', results[0].readSnapshotIds);
+        }
+        return r;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callAct(List<String> leadIds, List<String> readSnapshotIds) {
+        LoopActAction.ActRequest req = new LoopActAction.ActRequest();
+        req.leadIds = leadIds;
+        req.readSnapshotIds = readSnapshotIds;
+        List<LoopActAction.ActResult> results = LoopActAction.execute(new List<LoopActAction.ActRequest>{ req });
+        Map<String, Object> r = new Map<String, Object>();
+        if (!results.isEmpty()) {
+            r.put('success', results[0].success);
+            r.put('message', results[0].message);
+            r.put('actSnapshotIds', results[0].actSnapshotIds);
+            
+            List<Map<String, Object>> predictions = new List<Map<String, Object>>();
+            if (!results[0].actSnapshotIds.isEmpty()) {
+                for (Lead_Act_Snapshot__c snap : [
+                    SELECT Id, Lead__c, Verdict__c, Confidence__c, Predicted_Window__c
+                    FROM Lead_Act_Snapshot__c WHERE Id IN :results[0].actSnapshotIds
+                ]) {
+                    predictions.add(new Map<String, Object>{
+                        'id' => snap.Lead__c,
+                        'verdict' => snap.Verdict__c,
+                        'confidence' => snap.Confidence__c,
+                        'predicted_window' => snap.Predicted_Window__c
+                    });
+                }
+            }
+            r.put('predictions', predictions);
+        }
+        return r;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callStage(List<String> leadIds, List<String> actSnapshotIds) {
+        LoopStageActivitiesAction.StageRequest req = new LoopStageActivitiesAction.StageRequest();
+        req.leadIds = leadIds;
+        req.actSnapshotIds = actSnapshotIds;
+        List<LoopStageActivitiesAction.StageResult> results = LoopStageActivitiesAction.execute(new List<LoopStageActivitiesAction.StageRequest>{ req });
+        Map<String, Object> r = new Map<String, Object>();
+        if (!results.isEmpty()) {
+            r.put('success', results[0].success);
+            r.put('message', results[0].message);
+        }
+        return r;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callObserve(List<String> leadIds, List<String> actSnapshotIds) {
+        LoopObserveAction.ObserveRequest req = new LoopObserveAction.ObserveRequest();
+        req.leadIds = leadIds;
+        req.actSnapshotIds = actSnapshotIds;
+        List<LoopObserveAction.ObserveResult> results = LoopObserveAction.execute(new List<LoopObserveAction.ObserveRequest>{ req });
+        Map<String, Object> r = new Map<String, Object>();
+        if (!results.isEmpty()) {
+            r.put('success', results[0].success);
+            r.put('message', results[0].message);
+        }
+        return r;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callTune(String observeSummary) {
+        LoopTuneAction.TuneRequest req = new LoopTuneAction.TuneRequest();
+        req.observeSummary = observeSummary;
+        List<LoopTuneAction.TuneResult> results = LoopTuneAction.execute(new List<LoopTuneAction.TuneRequest>{ req });
+        Map<String, Object> r = new Map<String, Object>();
+        if (!results.isEmpty()) {
+            r.put('success', results[0].success);
+            r.put('message', results[0].message);
+            r.put('tuneSnapshotId', results[0].tuneSnapshotId);
+            
+            if (String.isNotBlank(results[0].tuneSnapshotId)) {
+                Lead_Classifier_Tune_Snapshot__c tuneSnap = [
+                    SELECT Id, Former_Model_Version__c, New_Model_Version__c
+                    FROM Lead_Classifier_Tune_Snapshot__c WHERE Id = :results[0].tuneSnapshotId
+                    LIMIT 1
+                ];
+                r.put('former_version_id', tuneSnap.Former_Model_Version__c);
+                r.put('new_version_id', tuneSnap.New_Model_Version__c);
+                r.put('proposal_summary', results[0].message);
+            }
+        }
+        return r;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callRollback(List<String> leadIds) {
+        return LoopRollbackAction.rollback(leadIds);
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> callRerunNoSignal() {
+        List<Lead> noSignalLeads = [
+            SELECT Id FROM Lead
+            WHERE Loop1_Verdict__c = 'Hard_Disqualify'
+            AND IsConverted = false
+        ];
+        if (noSignalLeads.isEmpty()) {
+            return new Map<String, Object>{'success' => false, 'message' => 'No No-Signal leads found'};
+        }
+        List<String> leadIds = new List<String>();
+        for (Lead l : noSignalLeads) leadIds.add(l.Id);
+
+        return new Map<String, Object>{
+            'success' => true,
+            'leadIds' => leadIds,
+            'message' => leadIds.size() + ' Hard_Disqualify lead(s) ready for re-classification'
+        };
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> readLeadSingleAsync(Id recordId) {
+        try {
+            Lead lead = [SELECT Id, Name, LeadSource, Phone, Email FROM Lead WHERE Id = :recordId LIMIT 1];
+            if (lead == null) throw new AuraHandledException('Lead not found');
+            HttpRequest req = new HttpRequest();
+            req.setEndpoint('http://146.190.153.46:9000/read');
+            req.setMethod('POST');
+            req.setHeader('Content-Type', 'application/json');
+            req.setBody(JSON.serialize(new Map<String, Object>{'lead_id' => lead.Id}));
+            Http http = new Http();
+            HttpResponse res = http.send(req);
+            return new Map<String, Object>{'snapshotId' => 'SNAP-' + DateTime.now().format('yyyyMMdd-HHmmss'), 'timestamp' => DateTime.now().format('yyyy-MM-dd HH:mm:ss'), 'dataCloudJoins' => new Map<String, Object>{'existingCustomer' => 'No match', 'sourceBindRate' => '4.1%'}, 'costOfPursuit' => '87', 'expectedMargin' => '1240'};
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> actLeadSingleAsync(Id recordId, String readSnapshotId) {
+        try {
+            return new Map<String, Object>{'outcome' => 'Nurture', 'confidence' => 0.78, 'predictedWindow' => 'Medium (30–90 days)', 'reasoning' => new List<Map<String, Object>>(), 'modelVersion' => 'v2.7.0', 'decidedAt' => DateTime.now().format('HH:mm:ss')};
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Map<String, Object> loop2AssignSingleAsync(Id recordId, String verdict) {
+        try {
+            String campaignName = verdict == 'Nurture' ? 'Auto · 30–90 Day Switchers · Q2 Promo' : 'Homeowners · Direct · 30–60 Day Pipeline';
+            List<Campaign> campaigns = [SELECT Id FROM Campaign WHERE Name = :campaignName LIMIT 1];
+            if (!campaigns.isEmpty()) {
+                List<CampaignMember> existing = [SELECT Id FROM CampaignMember WHERE LeadId = :recordId AND CampaignId = :campaigns[0].Id LIMIT 1];
+                if (existing.isEmpty()) {
+                    insert new CampaignMember(CampaignId = campaigns[0].Id, LeadId = recordId, Status = 'Sent');
+                }
+            }
+            return new Map<String, Object>{'campaign' => campaignName, 'queue' => 'Default', 'channel' => 'Default'};
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void updateLeadClassificationFields(Id recordId, Map<String, Object> classification) {
+        try {
+            Lead lead = new Lead(Id = recordId);
+            if (classification.containsKey('outcome')) lead.Loop1_Outcome__c = (String) classification.get('outcome');
+            if (classification.containsKey('confidence')) lead.Loop1_Confidence__c = (Decimal) classification.get('confidence');
+            if (classification.containsKey('predictedWindow')) lead.Loop1_Predicted_Window__c = (String) classification.get('predictedWindow');
+            if (classification.containsKey('reason')) lead.Loop1_Reason__c = (String) classification.get('reason');
+            if (classification.containsKey('modelVersion')) lead.Loop1_Model_Version__c = (String) classification.get('modelVersion');
+            lead.Loop1_Decided_At__c = DateTime.now();
+            update lead;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+}

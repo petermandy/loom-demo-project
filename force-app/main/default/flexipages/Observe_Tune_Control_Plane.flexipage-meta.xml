@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flexiPageType>AppPage</flexiPageType>
+    <label>Observe Tune Control Plane</label>
+    <regions>
+        <name>main</name>
+        <prependedFacets>
+            <componentInstances>
+                <componentInstanceProperties>
+                    <name>objectNames</name>
+                </componentInstanceProperties>
+                <componentName>flexipage:richTextBlock</componentName>
+            </componentInstances>
+        </prependedFacets>
+        <regionType>main</regionType>
+    </regions>
+    <regions>
+        <name>content</name>
+        <regionType>main</regionType>
+        <componentInstances>
+            <componentInstanceProperties/>
+            <componentName>c:observeTuneDashboard</componentName>
+        </componentInstances>
+    </regions>
+    <template>flexipage:defaultAppPageTemplate</template>
+</FlexiPage>
