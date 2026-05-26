@@ -424,3 +424,47 @@
 .run-observe-button:hover {
   background: #0891B2;
 }
+
+.champion-badge {
+  background: linear-gradient(135deg, rgba(129, 201, 149, 0.15) 0%, rgba(129, 201, 149, 0.05) 100%);
+  border: 2px solid #81c995;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.champion-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #81c995;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.champion-version {
+  font-size: 28px;
+  font-weight: 700;
+  color: #81c995;
+  font-family: 'Monaco', 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+.champion-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: #81c995;
+  padding: 6px 12px;
+  background: rgba(129, 201, 149, 0.2);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.champion-description {
+  font-size: 12px;
+  color: #b0b0b0;
+  flex: 1;
+  text-align: right;
+}
