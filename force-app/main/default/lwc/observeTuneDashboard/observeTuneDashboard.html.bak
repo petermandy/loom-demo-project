@@ -120,7 +120,12 @@
               <template for:each={releaseStages} for:item="stage">
                 <div class="stage" key={stage.name}>
                   <div class="stage-name">{stage.name}</div>
-                  <div class="stage-status" data-status={stage.status}>{stage.status}</div>
+                  <div class="stage-status" 
+                      class:completed={stage.status === 'Completed'}
+                      class:in-progress={stage.status === 'In Progress'}
+                      class:pending={stage.status === 'Pending'}>
+                    {stage.status}
+                  </div>
                 </div>
               </template>
             </div>

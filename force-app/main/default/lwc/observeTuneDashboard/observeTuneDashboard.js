@@ -16,10 +16,22 @@ export default class ObserveTuneDashboard extends LightningElement {
   @track actionButtonLabel = 'Promote v2.8.0';
   @track observeTriggered = true;
   @track selectedTab = 'loop1';
+  @track releasePipelineStages = [
+  { name: 'Offline Validation', status: 'Completed' },
+  { name: 'Shadow Deployment', status: 'Pending' },
+  { name: 'Canary (5%)', status: 'Pending' },
+  { name: 'A/B Test (50%)', status: 'Pending' },
+  { name: 'Promotion', status: 'Pending' }
+];
 
   connectedCallback() {
+    console.log('releaseStages:', this.releaseStages);
     this.observeTriggered = true;
     this.loadTuneData();
+  }
+
+  isNotLastStage(index) {
+    return index < 4;
   }
 
   async loadTuneData() {
@@ -51,6 +63,8 @@ export default class ObserveTuneDashboard extends LightningElement {
       const result = await approveTuneAndPromote();
       if (result.success) {
         this.tuneApproved = true;
+        console.log('🎬 Starting animation...');
+        this.animateReleasePipeline();
         this.currentChampion = result.newModel;
         this.actionButtonLabel = this.currentChampion === 'v2.8.0' ? 'Rollback to v2.7.0' : 'Promote v2.8.0';
         this.releaseStatus = {
@@ -71,6 +85,49 @@ export default class ObserveTuneDashboard extends LightningElement {
     }
   }
 
+  async animateReleasePipeline() {
+    await this.delay(3000);
+    this.updateStageStatus('Shadow Deployment', 'In Progress');
+    
+    await this.delay(4000);
+    this.updateStageStatus('Shadow Deployment', 'Completed');
+    this.updateStageStatus('Canary (5%)', 'In Progress');
+    
+    await this.delay(4000);
+    this.updateStageStatus('Canary (5%)', 'Completed');
+    this.updateStageStatus('A/B Test (50%)', 'In Progress');
+    
+    await this.delay(4000);
+    this.updateStageStatus('A/B Test (50%)', 'Completed');
+    this.updateStageStatus('Promotion', 'In Progress');
+    
+    await this.delay(3000);
+    this.updateStageStatus('Promotion', 'Completed');
+  }
+
+  updateStageStatus(stageName, newStatus) {
+    console.log(`📊 Updating ${stageName} to ${newStatus}`);
+    const stage = this.releasePipelineStages.find(s => s.name === stageName);
+    if (stage) {
+      stage.status = newStatus;
+      this.releasePipelineStages = [...this.releasePipelineStages];
+    }
+  }
+
+  getStageStyle(status) {
+  if (status === 'Completed') {
+    return 'background: #81c995; color: #0f1419; font-weight: 700;';
+  } else if (status === 'In Progress') {
+    return 'background: #fbbf24; color: #0f1419; font-weight: 700; animation: pulse 1.5s ease-in-out infinite;';
+  } else {
+    return 'background: #6b7280; color: #ffffff;';
+  }
+}
+
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   get proposalList() {
     return this.tuneProposal?.proposals || [];
   }
@@ -87,15 +144,9 @@ export default class ObserveTuneDashboard extends LightningElement {
     return this.selectedTab === 'loop2';
   }
 
-  get releaseStages() {
-    return [
-      { name: 'Challenger Qualification', status: 'Completed' },
-      { name: 'Shadow Deployment', status: 'In Progress' },
-      { name: 'Canary (5%)', status: 'Pending' },
-      { name: 'A/B Test (50%)', status: 'Pending' },
-      { name: 'Promotion', status: 'Pending' }
-    ];
-  }
+get releaseStages() {
+  return this.releasePipelineStages;
+}
 
   handleTabClick(event) {
     this.selectedTab = event.currentTarget.dataset.tab;

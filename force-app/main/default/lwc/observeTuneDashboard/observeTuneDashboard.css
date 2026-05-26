@@ -207,50 +207,110 @@
   font-weight: 500;
 }
 
+/* Release Pipeline Container */
+.release-pipeline-container {
+  background: #0f1419;
+  padding: 24px;
+  border-radius: 4px;
+  margin: 20px 0;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.pipeline-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #81c995;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* Release Pipeline Stages */
 .release-pipeline {
-  display: grid;
+  display: flex;
+  align-items: center;
   gap: 12px;
   margin-bottom: 20px;
+  overflow-x: auto;
+  padding: 12px 0;
+  flex-wrap: wrap;
 }
 
 .stage {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 8px;
   padding: 12px;
-  background: #0f1419;
-  border-radius: 3px;
+  background: #1a2a4a;
+  border: 2px solid #4b5563;
+  border-radius: 6px;
+  min-width: 120px;
+  text-align: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .stage-name {
-  font-weight: 500;
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e0e0e0;
+  line-height: 1.2;
 }
 
 .stage-status {
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 3px;
   font-size: 11px;
   font-weight: 600;
-  text-align: center;
+  transition: all 0.3s ease;
+  background: #6b7280;
+  color: #ffffff;
 }
 
+/* Status-based colors */
 .stage-status[data-status="Completed"] {
-  background: #81c995;
-  color: #0f1419;
+  background: #81c995 !important;
+  color: #0f1419 !important;
+  font-weight: 700 !important;
 }
 
 .stage-status[data-status="In Progress"] {
-  background: #fbbf24;
-  color: #0f1419;
+  background: #fbbf24 !important;
+  color: #0f1419 !important;
+  font-weight: 700 !important;
+  animation: pulse 1.5s ease-in-out infinite !important;
 }
 
-.stage-status[data-status="Pending"] {
-  background: #6b7280;
-  color: white;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
+/* Pipeline Description */
+.pipeline-description {
+  background: rgba(10, 26, 46, 0.5);
+  padding: 16px;
+  border-left: 3px solid #0ea5e9;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.description-item {
+  font-size: 12px;
+  color: #b0b0b0;
+  line-height: 1.5;
+}
+
+.description-item strong {
+  color: #0ea5e9;
+  font-weight: 600;
+}
+
+/* Final Status */
 .final-status {
   padding: 16px;
   background: #0f1419;
@@ -259,6 +319,7 @@
   font-weight: 600;
   text-align: center;
   border-radius: 3px;
+  margin-top: 16px;
 }
 
 .loading-container {
