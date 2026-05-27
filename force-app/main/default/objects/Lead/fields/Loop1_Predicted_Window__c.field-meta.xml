@@ -2,28 +2,69 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Loop1_Predicted_Window__c</fullName>
     <externalId>false</externalId>
-    <label>Loop 1: Predicted Window</label>
+    <label>Classification Loop: Predicted Window</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <type>Picklist</type>
     <valueSet>
-        <restricted>false</restricted>
+        <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Short</fullName>
+                <fullName>Immediate</fullName>
                 <default>false</default>
-                <label>Short (0-30 days)</label>
+                <label>Immediate</label>
             </value>
             <value>
-                <fullName>Medium</fullName>
+                <fullName>Next 7 Days</fullName>
                 <default>false</default>
-                <label>Medium (30-90 days)</label>
+                <label>Next 7 Days</label>
+            </value>
+            <value>
+                <fullName>Next 30 Days</fullName>
+                <default>false</default>
+                <label>Next 30 Days</label>
+            </value>
+            <value>
+                <fullName>30-90 days</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>30-90 days</label>
+            </value>
+            <value>
+                <fullName>Extended</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Extended</label>
+            </value>
+            <value>
+                <fullName>Indefinite</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Indefinite</label>
             </value>
             <value>
                 <fullName>Long</fullName>
                 <default>false</default>
-                <label>Long (90+ days)</label>
+                <isActive>false</isActive>
+                <label>Long</label>
+            </value>
+            <value>
+                <fullName>Medium</fullName>
+                <default>false</default>
+                <label>Medium</label>
+            </value>
+            <value>
+                <fullName>No Window</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>No Window</label>
+            </value>
+            <value>
+                <fullName>Short</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Short</label>
             </value>
         </valueSetDefinition>
     </valueSet>
