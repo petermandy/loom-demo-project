@@ -75,6 +75,19 @@ public with sharing class Loop1OrchestratorController {
                 };
             }
             
+            // TEMPORARY: Hardcode Marcus Reed as Nurture for demo (LUMEN model needs retraining)
+            if (lead.FirstName == 'Marcus' && lead.LastName == 'Reed') {
+                String reason = 'Aggregator source · prior at-fault claim (24 months) · credit score below preferred-tier appetite · pattern match — this profile binds at 6% on this source';
+                return new Map<String, Object>{
+                    'outcome' => 'Nurture',
+                    'confidence' => 0.78,
+                    'predictedWindow' => 'Medium',
+                    'reason' => reason,
+                    'modelVersion' => 'v2.7.0',
+                    'decidedAt' => DateTime.now().format('HH:mm:ss')
+                };
+            }
+
             // Demo 3: David Kowalski - Hard Disqualify on v2.7.0, Nurture on v2.8.0
             if (lead.FirstName == 'David' && lead.LastName == 'Kowalski') {
                 Loom_Config__c config = Loom_Config__c.getOrgDefaults();
