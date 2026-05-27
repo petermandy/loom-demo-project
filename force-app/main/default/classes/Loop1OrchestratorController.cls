@@ -231,7 +231,7 @@ public with sharing class Loop1OrchestratorController {
         try {
             Lead lead = new Lead(Id = recordId);
             if (classification.containsKey('outcome')) lead.Loop1_Outcome__c = (String) classification.get('outcome');
-            if (classification.containsKey('confidence')) lead.Loop1_Confidence__c = ((Decimal) classification.get('confidence')) * 100;
+            if (classification.containsKey('confidence')) lead.Loop1_Confidence__c = (Decimal) classification.get('confidence');
             if (classification.containsKey('predictedWindow')) lead.Loop1_Predicted_Window__c = (String) classification.get('predictedWindow');
             if (classification.containsKey('reason')) lead.Loop1_Reason__c = (String) classification.get('reason');
             if (classification.containsKey('modelVersion')) lead.Loop1_Model_Version__c = (String) classification.get('modelVersion');
