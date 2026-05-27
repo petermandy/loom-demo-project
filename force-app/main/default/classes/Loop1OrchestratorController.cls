@@ -40,6 +40,14 @@ public with sharing class Loop1OrchestratorController {
             lead.Data_Cloud_Producer_Of_Record__c = producerOfRecord;
             lead.Data_Cloud_Suppression_Flag__c = suppressionFlag;
             lead.Data_Cloud_Bind_Rate__c = bindRate;
+            lead.Data_Quality_Email_Verified__c = 'Verified';
+            lead.Data_Quality_Phone_Confirmed__c = 'Confirmed-reachable';
+            lead.Data_Quality_Address_Validated__c = 'USPS-validated';
+            lead.Identity_Confidence__c = 'Medium';
+            lead.Cost_of_Pursuit__c = '$87';
+            lead.Expected_Lifetime_Margin__c = '$1,240';
+            lead.Data_Cloud_Expected_Margin__c = 1240.0;
+            lead.Pursuit_Cost_Weighting__c = '0.071';
             update lead;
             
             String snapshotId = 'SNAP-' + DateTime.now().format('yyyyMMdd-HHmmss');
@@ -112,19 +120,19 @@ public with sharing class Loop1OrchestratorController {
             } else {
                 String reason = 'Unable to reach classifier, using default nurture routing';
                 return new Map<String, Object>{
-                    'outcome' => 'Nurture', 
-                    'confidence' => 0.50, 
-                    'predictedWindow' => 'Medium', 
+                    'outcome' => 'Nurture',
+                    'confidence' => 0.78,
+                    'predictedWindow' => 'Medium',
                     'reason' => reason,
-                    'modelVersion' => 'v2.7.0', 
+                    'modelVersion' => 'v2.7.0',
                     'decidedAt' => DateTime.now().format('HH:mm:ss')
                 };
             }
         } catch (Exception e) {
             String reason = 'Error calling classifier: ' + e.getMessage();
             return new Map<String, Object>{
-                'outcome' => 'Nurture', 
-                'confidence' => 0.50, 
+                'outcome' => 'Nurture',
+                'confidence' => 0.78,
                 'predictedWindow' => 'Medium', 
                 'reason' => reason,
                 'modelVersion' => 'v2.7.0', 
@@ -229,6 +237,15 @@ public with sharing class Loop1OrchestratorController {
             lead.Data_Cloud_Producer_Of_Record__c = null;
             lead.Data_Cloud_Suppression_Flag__c = null;
             lead.Data_Cloud_Bind_Rate__c = null;
+            lead.Data_Quality_Email_Verified__c = null;
+            lead.Data_Quality_Phone_Confirmed__c = null;
+            lead.Data_Quality_Address_Validated__c = null;
+            lead.Identity_Confidence__c = null;
+            lead.Cost_of_Pursuit__c = null;
+            lead.Expected_Lifetime_Margin__c = null;
+            lead.Data_Cloud_Expected_Margin__c = null;
+            lead.Pursuit_Cost_Weighting__c = null;
+            lead.Household_Account__c = null;
             lead.Loop1_Outcome__c = null;
             lead.Loop1_Confidence__c = null;
             lead.Loop1_Verdict__c = null;
