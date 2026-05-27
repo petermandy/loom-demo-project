@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loop1_Manual_Review__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>True when the Classifier pivoted to manual review (per-decision pivot criterion).</description>
+    <externalId>false</externalId>
+    <label>Classification Loop: Manual Review</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

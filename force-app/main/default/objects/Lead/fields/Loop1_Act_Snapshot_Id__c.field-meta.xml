@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loop1_Act_Snapshot_Id__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to the Lead Act Snapshot that produced this classification.</description>
+    <externalId>false</externalId>
+    <label>Classification Loop: Act Snapshot</label>
+    <referenceTo>Lead_Act_Snapshot__c</referenceTo>
+    <relationshipLabel>Leads (Loop 1 Decision)</relationshipLabel>
+    <relationshipName>Leads_With_This_Decision</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>
