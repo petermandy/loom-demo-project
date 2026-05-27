@@ -311,4 +311,14 @@ public with sharing class Loop1OrchestratorController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getDemoTiming() {
+        Demo_Timing__c t = Demo_Timing__c.getOrgDefaults();
+        return new Map<String, Object>{
+            'readSeconds'  => t != null && t.Loop1_Read_Seconds__c != null ? (Integer)t.Loop1_Read_Seconds__c : 20,
+            'actSeconds'   => t != null && t.Loop1_Act_Seconds__c  != null ? (Integer)t.Loop1_Act_Seconds__c  : 15,
+            'loop2Seconds' => t != null && t.Loop2_Seconds__c       != null ? (Integer)t.Loop2_Seconds__c       : 15
+        };
+    }
 }
